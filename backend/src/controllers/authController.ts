@@ -1,35 +1,36 @@
 import User from "../models/user";
 import bcrypt from "bcryptjs";
 import set_cookie_jwt from "../utils/jwt";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
+import { ResponseError } from "../middlewares/errorHandler";
 
-
-const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ message: errors.array() });
+    const res_error = new ResponseError(errors.array(), 400);
+    return next(res_error);
   }
-  console.log(req.body);
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      const res_error = new ResponseError("Invalid Credentials", 400);
+      return next(res_error);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      const res_error = new ResponseError("Invalid Credentials", 400);
+      return next(res_error);
     }
 
     set_cookie_jwt(res, user);
 
     res.status(200).json({ userId: user._id });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Something went wrong" });
+    next(error);
   }
 };
 

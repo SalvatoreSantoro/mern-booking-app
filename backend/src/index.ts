@@ -4,9 +4,14 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
+import {errorHandler} from "./middlewares/errorHandler"
 
+try {
+  mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
+} catch (error) {
+  console.log(error);
+}
 
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
 
 const port = 8000;
 
@@ -20,6 +25,10 @@ app.use(cors());
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+
+
+// Error Handling
+app.use(errorHandler)
 
 
 app.listen(port, () => {

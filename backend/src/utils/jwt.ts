@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
+import { UserType } from "../models/user";
 
-const set_cookie_jwt = (res: Response, user: any) => {
+
+const set_cookie_jwt = (res: Response, user: UserType) => {
   const token = jwt.sign(
-    { userId: user.id },
+    { userId: user._id },
     process.env.JWT_SECRET_KEY as string,
     { expiresIn: "1d" }
   );
