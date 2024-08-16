@@ -1,36 +1,17 @@
-import express, { Request, Response } from "express";
-import cors from "cors";
+import app from "./app";
+import connectDB from "./db/index";
+
 import "dotenv/config";
-import mongoose from "mongoose";
-import userRoutes from "./routes/users";
-import authRoutes from "./routes/auth";
-import {errorHandler} from "./middlewares/errorHandler"
 
-try {
-  mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
-} catch (error) {
-  console.log(error);
-}
+const port = process.env.SERVER_PORT || 8000;
 
-
-const port = 8000;
-
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
-
-// Routes
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
-
-
-// Error Handling
-app.use(errorHandler)
-
-
-app.listen(port, () => {
-  console.log(`Express running on port ${port}`);
-});
+connectDB()
+  .then(() =>
+    app.listen(port, () => {
+      console.log(`Express running on port ${port}`);
+    })
+  )
+  .catch((err) => {
+    console.log("MongoDB connenction error can't run the application", err);
+    process.exit(1);
+  });
