@@ -6,7 +6,7 @@ import { validationResult } from "express-validator";
 import { ResponseError } from "../middlewares/errorHandler";
 import asyncHandler from "../utils/asyncHandler";
 
-const login = asyncHandler(
+export const login = asyncHandler(
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
@@ -24,4 +24,7 @@ const login = asyncHandler(
   }
 );
 
-export default login;
+export const validateToken = (req: Request, res: Response) => {
+  res.status(200).send({ userId: req.userId })
+};
+
