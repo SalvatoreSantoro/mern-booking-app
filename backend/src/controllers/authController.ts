@@ -7,7 +7,7 @@ import { ResponseError } from "../middlewares/errorHandler";
 import asyncHandler from "../utils/asyncHandler";
 
 const login = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
     const { email, password } = req.body;

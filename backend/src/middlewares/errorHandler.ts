@@ -18,9 +18,9 @@ class ResponseError extends Error{
 const errorHandler = (err: ResponseError, req: Request, res: Response, next: NextFunction) => {
     console.log(err.message);
     if(err.statusCode){
-        res.status(err.statusCode).json({msg: err.message});
+        res.status(err.statusCode).send({msg: err.message});
     }else{
-        res.status(500).json({msg: "Something went wrong"});
+        res.status(500).send({msg: "Something went wrong"});
     }
 };
 

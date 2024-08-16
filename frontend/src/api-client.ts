@@ -13,8 +13,8 @@ export const register = async (formData: RegisterFormData): Promise<void> => {
   });
 
   const responseBody = await response.json();
-
+  console.log(responseBody);
   if (!response.ok) {
-    throw new Error(responseBody.message);
+    throw new Error(responseBody.msg);
   }
 };

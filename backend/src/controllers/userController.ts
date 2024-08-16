@@ -5,21 +5,20 @@ import { validationResult } from "express-validator";
 import { ResponseError } from "../middlewares/errorHandler";
 import asyncHandler from "../utils/asyncHandler";
 
-const register = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
-    let user = await User.findOne({
-      email: req.body.email,
-    });
-    if (user) throw new ResponseError("User already exists", 400);
+const register = asyncHandler(async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
+  let user = await User.findOne({
+    email: req.body.email,
+  });
+  if (user) throw new ResponseError("User already exists", 400);
 
-    user = new User(req.body);
-    await user.save();
+  user = new User(req.body);
+  await user.save();
 
-    set_cookie_jwt(res, user);
-    res.status(200).json({ userId: user._id });
-  }
-);
+  set_cookie_jwt(res, user);
+  //res.status(200).json({ userId: user._id });
+  res.status(200).send({ message: "Registration successfull." });
+});
 
 export default register;
