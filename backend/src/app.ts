@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth";
 import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
+
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 
 // Routes
