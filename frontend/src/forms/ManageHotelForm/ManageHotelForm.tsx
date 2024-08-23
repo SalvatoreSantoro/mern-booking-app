@@ -19,7 +19,12 @@ export type HotelFormData = {
   childCount: number;
 };
 
-const ManageHotelForm = () => {
+type Props = {
+  onSave: (hotelFormData: FormData) => void;
+  status: string;
+};
+
+const ManageHotelForm = ({ onSave, status }: Props) => {
   const formMethods = useForm<HotelFormData>();
   const { handleSubmit } = formMethods;
 
@@ -34,15 +39,19 @@ const ManageHotelForm = () => {
     formData.append("starRating", formDataJson.starRating.toString());
     formData.append("adultCount", formDataJson.adultCount.toString());
     formData.append("childCount", formDataJson.childCount.toString());
-    
+
     formDataJson.facilities.forEach((facility, index) => {
-      formData.append(`facilities[${index}]`, facility)
-    })
-    
+      formData.append(`facilities[${index}]`, facility);
+    });
+
     Array.from(formDataJson.imageFiles).forEach((imageFile) => {
       formData.append("imageFiles", imageFile);
-    } )
+    });
+    onSave(formData);
   });
+
+  console.log(status)
+
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={onSubmit} className="flex flex-col gap-10">
@@ -53,10 +62,11 @@ const ManageHotelForm = () => {
         <ImageSection></ImageSection>
         <span className="flex justify-end">
           <button
+            disabled={status === "pending"}
             type="submit"
-            className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl rounded-md"
+            className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl rounded-md disabled:bg-gray-500"
           >
-            Save
+            {status === "pending" ? "Saving..." : "Save"}
           </button>
         </span>
       </form>

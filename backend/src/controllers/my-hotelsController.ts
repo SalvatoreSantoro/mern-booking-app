@@ -6,9 +6,9 @@ import { validationResult } from "express-validator";
 import { ResponseError } from "../middlewares/errorHandler";
 
 export const createHotel = asyncHandler(async (req: Request, res: Response) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req.body);
+  console.log(errors);
   if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
-  
   const imageFiles = req.files as Express.Multer.File[];
   const newHotel: HotelType = req.body;
 
