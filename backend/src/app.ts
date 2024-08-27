@@ -1,4 +1,5 @@
 import express from "express";
+import { Request, Response } from "express";
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import myHotelRoutes from "./routes/my-hotels";
@@ -34,6 +35,11 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
+
+// Request for pages that aren't static because are generated at runtime, for example pages you can access only after login
+app.get("*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"))
+});
 
 // Error Handling
 app.use(errorHandler);
