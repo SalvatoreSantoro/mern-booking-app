@@ -1,5 +1,5 @@
 import express from "express";
-import { createHotel, getHotels } from "../controllers/my-hotelsController";
+import { createHotel, getHotelById, getHotels } from "../controllers/my-hotelsController";
 import multer from "multer";
 import verifyToken from "../middlewares/auth";
 import { body } from "express-validator";
@@ -38,5 +38,8 @@ router.post(
 );
 
 router.get("/", verifyToken, getHotels)
+
+
+router.get("/:id", verifyToken, getHotelById)
 
 export default router;

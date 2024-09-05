@@ -34,3 +34,12 @@ export const getHotels = asyncHandler(async (req: Request, res: Response) => {
   const hotels = await Hotel.find({ userId: req.userId });
   res.json(hotels);
 });
+
+export const getHotelById = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id.toString();
+  const hotel = await Hotel.findOne({
+    _id: id,
+    userId: req.userId
+  })
+  res.json(hotel);
+})
