@@ -29,12 +29,13 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // Request for pages that aren't static because are generated at runtime, for example pages you can access only after login
 app.get("*", (req: Request, res: Response) => {
