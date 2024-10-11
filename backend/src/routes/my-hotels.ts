@@ -8,7 +8,6 @@ import {
 import multer from "multer";
 import verifyToken from "../middlewares/auth";
 import { body } from "express-validator";
-import { validateToken } from "../controllers/authController";
 
 const router = express.Router();
 

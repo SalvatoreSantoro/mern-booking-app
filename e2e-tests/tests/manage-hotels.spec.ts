@@ -70,11 +70,11 @@ test("should display hotels", async ({ page }) => {
 });
 
 test("should edit hotel", async ({ page }) => {
-  await page.goto(`${UI_URL}my-hotels`); 
+  await page.goto(`${UI_URL}my-hotels`);
 
   const buttons = page.getByRole("link", { name: "View Details" });
 
-  await buttons.nth(0).click(); 
+  await buttons.nth(0).click();
 
   await page.waitForSelector('[name="name"]', { state: "attached" });
 
@@ -85,4 +85,12 @@ test("should edit hotel", async ({ page }) => {
   await page.getByRole("button", { name: "Save" }).click();
 
   await expect(page.getByText("Hotel edited succesfully!")).toBeVisible();
+
+  await page.reload();
+
+  await expect(page.locator('[name="name"]')).toHaveValue("Test Hotel UPDATED");
+  
+  await page.locator('[name="name"]').fill("Test Hotel");
+  
+   await page.getByRole("button", { name: "Save" }).click();
 });

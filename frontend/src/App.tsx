@@ -3,6 +3,7 @@ import Layout from "./layout/Layout";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import AddHotel from "./pages/AddHotel";
+import Search from "./pages/Search";
 import { useAppContext } from "./contexts/AppContext";
 import MyHotels from "./pages/MyHotels";
 import EditHotel from "./pages/EditHotel";
@@ -25,7 +26,7 @@ function App() {
           path="/search"
           element={
             <Layout>
-              <p>Search Page</p>
+              <Search/>
             </Layout>
           }
         ></Route>
