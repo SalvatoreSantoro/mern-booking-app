@@ -6,8 +6,6 @@ import constructSearchQuery from "../utils/constructSearchQuery";
 
 export const searchHotel = asyncHandler(async (req: Request, res: Response) => {
   const query = constructSearchQuery(req.query);
-  //console.log(req.query)
-
   let sortOptions = {};
   switch (req.query.sortOption) {
     case "starRating":
@@ -20,7 +18,6 @@ export const searchHotel = asyncHandler(async (req: Request, res: Response) => {
       sortOptions = { pricePerNight: -1 };
       break;
   }
-
   const pageSize = 5;
   const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
   const skip = (pageNumber - 1) * pageSize;

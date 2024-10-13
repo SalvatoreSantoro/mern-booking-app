@@ -5,11 +5,23 @@ import { useState } from "react";
 import SearchResultCard from "../components/SearchResultCard";
 import Pagination from "../components/Pagination";
 import StarRatingFilter from "../components/StarRatingFilter";
+import HotelTypesFilter from "../components/HotelTypesFilter";
+import FacilitiesFilter from "../components/FacilitiesFilter";
+import PriceFilter from "../components/PriceFilter";
+import SortingSelectBox from "../components/SortingSelectBox";
 
 const Search = () => {
   const search = useSearchContext();
   const [page, setPage] = useState<number>(1);
   const [selectedStars, setSelectedStars] = useState<string[]>([]);
+  const [selectedHotelTypes, setSelectedHotelTypes] = useState<string[]>([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState<
+    number | undefined
+  >();
+  const [selectedSortingOption, setSelectedSortingOption] = useState<
+    string | undefined
+  >();
 
   const handleStarsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const starRating = event.target.value;
@@ -20,6 +32,33 @@ const Search = () => {
     );
   };
 
+  const handleHotelTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checkeHotelType = event.target.value;
+    setSelectedHotelTypes((prevHotelTypes) =>
+      event.target.checked
+        ? [...prevHotelTypes, checkeHotelType]
+        : prevHotelTypes.filter((hotelType) => hotelType !== checkeHotelType)
+    );
+  };
+
+  const handleFacilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checkedFacility = event.target.value;
+    setSelectedFacilities((prevFacility) =>
+      event.target.checked
+        ? [...prevFacility, checkedFacility]
+        : prevFacility.filter((facility) => facility !== checkedFacility)
+    );
+  };
+
+  const handleMaxPriceChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedMaxPrice = parseInt(event.target.value);
+    setSelectedMaxPrice(selectedMaxPrice);
+  };
+
   const searchParams = {
     destination: search.destination,
     checkIn: search.checkIn.toISOString(),
@@ -27,7 +66,11 @@ const Search = () => {
     adultCount: search.adultCount.toString(),
     childCount: search.childCount.toString(),
     page: page.toString(),
-    stars: selectedStars
+    stars: selectedStars,
+    types: selectedHotelTypes,
+    facilities: selectedFacilities,
+    maxPrice: selectedMaxPrice?.toString(),
+    sortOption: selectedSortingOption,
   };
 
   const { data: hotelData } = useQuery({
@@ -46,6 +89,19 @@ const Search = () => {
             selectedStars={selectedStars}
             onChange={handleStarsChange}
           />
+          <HotelTypesFilter
+            selectedHotelTypes={selectedHotelTypes}
+            onChange={handleHotelTypeChange}
+          />
+          <FacilitiesFilter
+            selectedFacilities={selectedFacilities}
+            onChange={handleFacilityChange}
+          />
+
+          <PriceFilter
+            selectedMaxPrice={selectedMaxPrice}
+            onChange={handleMaxPriceChange}
+          />
         </div>
       </div>
 
@@ -55,7 +111,12 @@ const Search = () => {
             {hotelData?.pagination.total} Hotels found
             {search.destination ? ` in ${search.destination}` : ""}
           </span>
-          {/*TODO sort options*/}
+          <div>
+            <SortingSelectBox
+              selectedSortingOption={selectedSortingOption}
+              onChange={(event) => setSelectedSortingOption(event.target.value)}
+            />
+          </div>
         </div>
         {hotelData?.data.map((hotel) => (
           <SearchResultCard hotel={hotel} />
