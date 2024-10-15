@@ -7,9 +7,10 @@ import Search from "./pages/Search";
 import { useAppContext } from "./contexts/AppContext";
 import MyHotels from "./pages/MyHotels";
 import EditHotel from "./pages/EditHotel";
+import Details from "./pages/Details";
 
 function App() {
-  const {isLoggedIn} = useAppContext();
+  const { isLoggedIn } = useAppContext();
   return (
     <BrowserRouter>
       <Routes>
@@ -26,7 +27,16 @@ function App() {
           path="/search"
           element={
             <Layout>
-              <Search/>
+              <Search />
+            </Layout>
+          }
+        ></Route>
+
+        <Route
+          path="/detail/:id"
+          element={
+            <Layout>
+              <Details />
             </Layout>
           }
         ></Route>
@@ -49,32 +59,35 @@ function App() {
           }
         ></Route>
 
-        {isLoggedIn && (<>
-          <Route path="/add-hotel"
-          element={
-            <Layout>
-              <AddHotel />
-            </Layout>
-          }></Route>
-          <Route path="/my-hotels"
-          element={
-            <Layout>
-              <MyHotels/>
-            </Layout>
-          }
-          >   
-          </Route>
-          <Route path="/edit-hotel/:hotelId"
-          element={
-            <Layout>
-              <EditHotel/>
-            </Layout>
-          }
-          >   
-          </Route>
-        </>)
-        }
-        
+        {isLoggedIn && (
+          <>
+            <Route
+              path="/add-hotel"
+              element={
+                <Layout>
+                  <AddHotel />
+                </Layout>
+              }
+            ></Route>
+            <Route
+              path="/my-hotels"
+              element={
+                <Layout>
+                  <MyHotels />
+                </Layout>
+              }
+            ></Route>
+            <Route
+              path="/edit-hotel/:hotelId"
+              element={
+                <Layout>
+                  <EditHotel />
+                </Layout>
+              }
+            ></Route>
+          </>
+        )}
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

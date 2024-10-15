@@ -22,7 +22,6 @@ async function uploadImages(imageFiles: Express.Multer.File[]) {
 
 
 export const createHotel = asyncHandler(async (req: Request, res: Response) => {
-  console.log("CANE")
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
   const imageFiles = req.files as Express.Multer.File[];
@@ -40,7 +39,7 @@ export const createHotel = asyncHandler(async (req: Request, res: Response) => {
 
 export const getHotels = asyncHandler(async (req: Request, res: Response) => {
   const hotels = await Hotel.find({ userId: req.userId });
-  res.json(hotels);
+  res.status(200).json(hotels);
 });
 
 export const getHotelById = asyncHandler(
@@ -50,7 +49,7 @@ export const getHotelById = asyncHandler(
       _id: id,
       userId: req.userId,
     });
-    res.json(hotel);
+    res.status(200).json(hotel);
   }
 );
 

@@ -40,7 +40,7 @@ export const validateToken = async () => {
   const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
     credentials: "include",
   });
-
+  
   if (!response.ok) {
     throw new Error("Token invalid");
   }
@@ -155,6 +155,16 @@ export const searchHotels = async (
 
   if (!response.ok) {
     throw new Error("Error fetching hotels");
+  }
+
+  return response.json();
+};
+
+export const fetchHotelById = async (id: string): Promise<HotelType> => {
+
+  const response = await fetch(`${API_BASE_URL}/api/hotels/${id}`);
+  if (!response.ok) {
+    throw new Error("Error fetching hotel");
   }
 
   return response.json();
