@@ -5,7 +5,7 @@ import { validationResult } from "express-validator";
 import { ResponseError } from "../middlewares/errorHandler";
 import asyncHandler from "../utils/asyncHandler";
 
-const register = asyncHandler(async (req: Request, res: Response) => {
+export const register = asyncHandler(async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) throw new ResponseError(errors.array(), 400);
   let user = await User.findOne({
@@ -21,4 +21,13 @@ const register = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).send({ message: "Registration successfull." });
 });
 
-export default register;
+
+export const getUser = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.userId;
+
+  const user = await User.findById(userId).select("-password");
+  if (!user) {
+    throw new ResponseError("User not found", 400);
+  }
+  res.json(user);
+});

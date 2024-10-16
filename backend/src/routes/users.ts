@@ -1,6 +1,7 @@
 import express from "express";
 import { check } from "express-validator";
-import register from "../controllers/userController";
+import {register , getUser} from "../controllers/userController";
+import verifyToken from "../middlewares/auth";
 const router = express.Router();
 
 router.post(
@@ -15,5 +16,7 @@ router.post(
   ],
   register
 );
+
+router.get("/me", verifyToken, getUser);
 
 export default router;

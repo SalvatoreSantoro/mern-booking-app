@@ -1,7 +1,7 @@
 import User from "../models/user";
 import bcrypt from "bcryptjs";
 import set_cookie_jwt from "../utils/jwt";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { ResponseError } from "../middlewares/errorHandler";
 import asyncHandler from "../utils/asyncHandler";

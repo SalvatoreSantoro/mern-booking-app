@@ -28,10 +28,17 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<GuestInfoFormData>();
+  } = useForm<GuestInfoFormData>({
+    defaultValues: {
+      checkIn: search.checkIn,
+      checkOut: search.checkOut,
+      adultCount: search.adultCount,
+      childCount: search.childCount,
+    },
+  });
 
-  const checkIn = watch("checkIn", search.checkIn);
-  const checkOut = watch("checkOut", search.checkOut);
+  const checkIn = watch("checkIn");
+  const checkOut = watch("checkOut");
   const minDate = new Date();
   const maxDate = new Date();
 
@@ -106,7 +113,6 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
               <input
                 className="w-full p-1 focus:outline-none font-bold"
                 type="number"
-                value={search.adultCount}
                 min={1}
                 max={20}
                 {...register("adultCount", {
@@ -124,7 +130,6 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
               <input
                 className="w-full p-1 focus:outline-none font-bold"
                 type="number"
-                value={search.childCount}
                 min={0}
                 max={20}
                 {...register("childCount", {

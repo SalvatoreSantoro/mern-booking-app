@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
-import { UserType } from "../models/user";
+import { UserType } from "../shared/types";
 
 
 const set_cookie_jwt = (res: Response, user: UserType) => {
