@@ -50,7 +50,6 @@ export const searchHotels = asyncHandler(
 export const getOneHotelById = asyncHandler(
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
       throw new ResponseError(errors.array(), 400);
     }
@@ -72,7 +71,7 @@ export const createPaymentIntent = asyncHandler(
 
     const totalCost = hotel.pricePerNight * numberOfNights;
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalCost,
+      amount: totalCost * 100,
       currency: "eur",
       metadata: {
         hotelId,
@@ -122,6 +121,7 @@ export const createBooking = asyncHandler(
       userId: req.userId,
     };
 
+
     const hotel = await Hotel.findOneAndUpdate(
       { _id: req.params.hotelId },
       {
@@ -132,6 +132,7 @@ export const createBooking = asyncHandler(
     if (!hotel) {
       throw new ResponseError("hotel not found", 400);
     }
+    
     await hotel.save();
     res.status(200).send();
   }

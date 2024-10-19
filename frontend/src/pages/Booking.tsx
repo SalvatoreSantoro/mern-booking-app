@@ -5,25 +5,27 @@ import { useSearchContext } from "../contexts/SearchContext";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BookingDetailSummary from "../components/BookingDetailSummary";
+import { Elements } from "@stripe/react-stripe-js";
+import { useAppContext } from "../contexts/AppContext";
 
 const Booking = () => {
+  const { stripePromise } = useAppContext();
   const search = useSearchContext();
-  const checkIn = search.checkIn;
-  const checkOut = search.checkOut;
   const adultCount = search.adultCount;
   const childCount = search.childCount;
 
   const [numberOfNights, setNumberOfNights] = useState<number>(0);
 
   useEffect(() => {
-    if (checkIn && checkOut) {
+    if (search.checkIn && search.checkOut) {
       const nights = Math.abs(
-        (search.checkOut.getTime() -
-          search.checkIn.getTime()) / (1000 * 60 * 60 * 24)
+        (search.checkOut.getTime() - search.checkIn.getTime()) /
+          (1000 * 60 * 60 * 24)
       );
       setNumberOfNights(Math.ceil(nights));
     }
-  }, [checkIn, checkOut]);
+    
+  }, [search.checkIn, search.checkOut]);
 
   const { hotelId } = useParams();
 
@@ -38,6 +40,17 @@ const Booking = () => {
     queryFn: apiClient.fetchCurrentUser,
   });
 
+  const { data: paymentIntentData } = useQuery({
+    queryKey: ["createPaymentIntent"],
+    queryFn: () =>
+      apiClient.createPaymentIntent(
+        hotelId as string,
+        numberOfNights.toString()
+      ),
+    enabled: !!hotelId && numberOfNights > 0,
+  });
+
+
   if (!hotel) {
     return <></>;
   }
@@ -45,14 +58,24 @@ const Booking = () => {
   return (
     <div className="grid md:grid-cols-[1fr_2fr]">
       <BookingDetailSummary
-        checkIn={checkIn}
-        checkOut={checkOut}
+        checkIn={search.checkIn}
+        checkOut={search.checkOut}
         adultCount={adultCount}
         childCount={childCount}
         numberOfNights={numberOfNights}
         hotel={hotel}
       />
-      {currentUser && <BookingForm currentUser={currentUser} />}
+      {currentUser && paymentIntentData && (
+        <Elements
+          stripe={stripePromise}
+          options={{ clientSecret: paymentIntentData.clientSecret }}
+        >
+          <BookingForm
+            currentUser={currentUser}
+            paymentIntent={paymentIntentData}
+          />
+        </Elements>
+      )}
     </div>
   );
 };

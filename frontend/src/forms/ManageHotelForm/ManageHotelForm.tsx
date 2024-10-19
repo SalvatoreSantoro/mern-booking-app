@@ -68,7 +68,6 @@ const ManageHotelForm = ({ onSave, status, hotel }: Props) => {
     onSave(formData);
   });
 
-  console.log(status);
 
   return (
     <FormProvider {...formMethods}>
