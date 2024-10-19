@@ -8,8 +8,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
-import hotelRoutes from "./routes/hotels"
-
+import hotelRoutes from "./routes/hotels";
+import bookingsRoutes from "./routes/my-bookings";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -36,13 +36,14 @@ app.use(
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
-app.use("/api/hotels", hotelRoutes)
+app.use("/api/hotels", hotelRoutes);
+app.use("/api/my-bookings", bookingsRoutes);
 
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // Request for pages that aren't static because are generated at runtime, for example pages you can access only after login
 app.get("*", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"))
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
 // Error Handling

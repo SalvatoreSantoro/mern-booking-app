@@ -121,7 +121,6 @@ export const createBooking = asyncHandler(
       userId: req.userId,
     };
 
-
     const hotel = await Hotel.findOneAndUpdate(
       { _id: req.params.hotelId },
       {
@@ -132,8 +131,13 @@ export const createBooking = asyncHandler(
     if (!hotel) {
       throw new ResponseError("hotel not found", 400);
     }
-    
+
     await hotel.save();
     res.status(200).send();
   }
 );
+
+export const getHotels = asyncHandler(async (req: Request, res: Response) => {
+  const hotels = await Hotel.find().sort("-lastUpdated");
+  res.json(hotels);
+});
